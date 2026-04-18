@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProductLab with JT — Powered by Product Slice HQ | Joshua Theophilus</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Literata:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0D0D0D;
+    --paper: #F7F3EC;
+    --gold: #C9A84C;
+    --gold-light: #F0D898;
+    --rust: #C4502A;
+    --teal: #1A6B6B;
+    --teal-light: #E0F0EE;
+    --slate: #3A3A4A;
+    --muted: #7A7A8A;
+    --border: #D8D0C0;
+    --white: #FFFFFF;
+    --tag-pm: #1A6B6B;
+    --tag-pmk: #C4502A;
+    --tag-pd: #6B3FA0;
+    --tag-all: #8a6e1c;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Literata', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 72px 48px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.18);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 60px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.12);
+    pointer-events: none;
+  }
+  .hero-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  .hero-brand-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+  }
+  .hero-brand-sep {
+    width: 1px;
+    height: 18px;
+    background: rgba(201,168,76,0.35);
+  }
+  .hero-brand-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(247,243,236,0.45);
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(34px, 5.5vw, 68px);
+    font-weight: 800;
+    line-height: 1.06;
+    color: var(--paper);
+    max-width: 820px;
+    margin-bottom: 22px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub {
+    font-family: 'Literata', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: rgba(247,243,236,0.65);
+    max-width: 600px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+    padding-top: 28px;
+    border-top: 1px solid rgba(201,168,76,0.2);
+  }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 5px; }
+  .hero-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .hero-meta-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--paper);
+  }
+
+  /* ── NAV ── */
+  .toc {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .toc::-webkit-scrollbar { display: none; }
+  .toc a {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 15px 18px;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .toc a:hover { color: var(--ink); border-bottom-color: var(--gold); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 48px; }
+  .section { padding: 68px 0; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+
+  /* ── SECTION HEADERS ── */
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-eyebrow::after {
+    content: '';
+    height: 1px;
+    background: var(--gold-light);
+    width: 60px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 3.5vw, 34px);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .section-desc {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 44px;
+    max-width: 620px;
+  }
+
+  /* ── SLIDE CARDS ── */
+  .slides-grid { display: flex; flex-direction: column; gap: 20px; }
+  .slide-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 72px 1fr;
+  }
+  .slide-number {
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 6px;
+    line-height: 1;
+  }
+  .slide-body { padding: 24px 28px; }
+  .slide-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .slide-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .slide-content { font-size: 14px; color: var(--slate); line-height: 1.65; }
+  .slide-content ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .slide-content ul li { padding-left: 16px; position: relative; }
+  .slide-content ul li::before { content: '—'; position: absolute; left: 0; color: var(--gold); font-weight: bold; }
+  .slide-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+  .tag-pm { background: rgba(26,107,107,0.1); color: var(--tag-pm); }
+  .tag-pmk { background: rgba(196,80,42,0.1); color: var(--tag-pmk); }
+  .tag-pd { background: rgba(107,63,160,0.1); color: var(--tag-pd); }
+  .tag-all { background: rgba(201,168,76,0.13); color: var(--tag-all); }
+
+  /* ── PHASE BANNER ── */
+  .phase-banner {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 18px 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+  .phase-banner-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .phase-banner-text h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .phase-banner-text p { font-size: 12px; color: rgba(247,243,236,0.55); font-style: italic; }
+
+  /* ── TOOL GRID ── */
+  .tool-section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin: 28px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .tool-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 16px;
+  }
+  .tool-card-name { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+  .tool-card-cat { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .tool-card-desc { font-size: 12px; color: var(--slate); line-height: 1.5; }
+
+  /* ── AGENDA TABLE ── */
+  .agenda-row {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    gap: 16px;
+    padding: 11px 16px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 14px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .agenda-time { font-family: 'DM Mono', monospace; color: var(--gold); font-size: 11px; }
+  .agenda-label { color: var(--ink); }
+  .agenda-dur {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+    text-align: right;
+  }
+  .agenda-row.highlight { background: var(--ink); border-color: var(--ink); }
+  .agenda-row.highlight .agenda-time { color: var(--gold); }
+  .agenda-row.highlight .agenda-label { color: var(--paper); font-weight: 600; }
+  .agenda-row.highlight .agenda-dur { color: rgba(247,243,236,0.5); }
+
+  /* ── BREAKOUT SECTION ── */
+  .breakout-section { background: var(--ink); padding: 68px 0; }
+  .breakout-section .section-title { color: var(--paper); }
+  .breakout-section .section-eyebrow { color: var(--gold); }
+  .breakout-section .section-desc { color: rgba(247,243,236,0.5); }
+  .breakout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .breakout-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.22);
+    border-radius: 4px;
+    padding: 32px 26px;
+  }
+  .breakout-card-num { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .breakout-card-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--paper); margin-bottom: 5px; line-height: 1.2; }
+  .breakout-card-tagline { font-style: italic; font-size: 13px; color: rgba(247,243,236,0.45); margin-bottom: 22px; }
+  .breakout-card h4 { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin: 20px 0 8px; }
+  .breakout-card ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .breakout-card ul li { font-size: 13px; color: rgba(247,243,236,0.78); padding-left: 14px; position: relative; line-height: 1.55; }
+  .breakout-card ul li::before { content: '›'; position: absolute; left: 0; color: var(--gold); }
+  .breakout-card .dur-badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.13);
+    border: 1px solid rgba(201,168,76,0.28);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-top: 20px;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid var(--gold);
+    background: rgba(201,168,76,0.07);
+    padding: 14px 18px;
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+    color: var(--slate);
+    font-size: 14px;
+    margin: 18px 0;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding: 18px 24px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 28px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--slate); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── ROLE CARDS ── */
+  .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 36px; }
+  .role-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 22px 18px; }
+  .role-card-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 8px; }
+  .role-card-body { font-size: 13.5px; color: var(--slate); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(247,243,236,0.35);
+    padding: 36px 48px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .06em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  footer span { color: var(--gold); }
+
+  @media (max-width: 640px) {
+    .hero, .toc, .container { padding-left: 20px; padding-right: 20px; }
+    .slide-card { grid-template-columns: 52px 1fr; }
+    .slide-number { font-size: 18px; }
+    .breakout-grid { grid-template-columns: 1fr; }
+    .agenda-row { grid-template-columns: 1fr; }
+    .agenda-dur { text-align: left; }
+    .hero-meta { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════ -->
+<header class="hero">
+  <div class="hero-brand">
+    <span class="hero-brand-name">ProductLab with JT</span>
+    <span class="hero-brand-sep"></span>
+    <span class="hero-brand-sub">Powered by Product Slice HQ · Joshua Theophilus</span>
+  </div>
+  <div class="hero-eyebrow">Facilitator Guide · Edition 01 · Full Day</div>
+  <h1>From Idea to <span>Live Product</span><br>in One Day</h1>
+  <p class="hero-sub">A hands-on workshop for product managers, designers & marketers on building real products with AI-assisted, low-code development — without waiting on engineering.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Workshop</span>
+      <span class="hero-meta-value">ProductLab with JT · Edition 01</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Date</span>
+      <span class="hero-meta-value">Saturday, April 2026</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Time</span>
+      <span class="hero-meta-value">1:00 PM – 6:00 PM</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Duration</span>
+      <span class="hero-meta-value">6 Hours Total</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Format</span>
+      <span class="hero-meta-value">3 Phases + 3 Labs</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Facilitator</span>
+      <span class="hero-meta-value">Joshua Theophilus</span>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="toc">
+  <a href="#overview">Overview</a>
+  <a href="#tools">Tool Stack</a>
+  <a href="#phase1">Phase 1</a>
+  <a href="#phase2">Phase 2</a>
+  <a href="#phase3">Phase 3</a>
+  <a href="#lab1">Lab A</a>
+  <a href="#lab2">Lab B</a>
+  <a href="#lab3">Lab C</a>
+  <a href="#demo">Demo Day</a>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════
+     OVERVIEW
+═══════════════════════════════════════════ -->
+<section class="section" id="overview">
+  <div class="container">
+    <div class="section-eyebrow">Workshop Brief</div>
+    <h2 class="section-title">What Participants Leave With</h2>
+    <p class="section-desc">ProductLab is not a "learn a tool" session. It's a mindset shift — where product professionals learn to build, ship, and validate real products independently.</p>
+
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-card-label" style="color:var(--tag-pm);">Product Managers</div>
+        <div class="role-card-body">Prototype ideas independently, validate with real users, and cut engineering time wasted on misaligned specs before a single line of production code is written.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-card-label" style="color:var(--tag-pd);">Product Designers</div>
+        <div class="role-card-body">Go from Figma frames to live, interactive, data-connected prototypes. Communicate design intent without handoff friction or translation loss.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-card-label" style="color:var(--tag-pmk);">Product Marketers</div>
+        <div class="role-card-body">Build live landing pages, analytics dashboards, and campaign tracking systems. Own your GTM execution without depending on a dev queue.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      💡 <strong>The Big Idea:</strong> AI-assisted development has collapsed the cost of bringing an idea to life. The bottleneck is no longer engineering — it's imagination and execution speed. ProductLab trains both.
+    </div>
+
+    <!-- AGENDA -->
+    <div style="margin-top:44px;">
+      <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px;">Day Flow at a Glance</div>
+
+      <div class="agenda-row">
+        <span class="agenda-time">1:00 – 1:30 PM</span>
+        <span class="agenda-label">Phase 1 — The Mental Model & Tool Stack</span>
+        <span class="agenda-dur">30 min</span>
+      </div>
+      <div class="agenda-row">
+        <span class="agenda-time">1:30 – 2:00 PM</span>
+        <span class="agenda-label">Phase 2 — Idea to Architecture (OCP Framework)</span>
+        <span class="agenda-dur">30 min</span>
+      </div>
+      <div class="agenda-row">
+        <span class="agenda-time">2:00 – 2:30 PM</span>
+        <span class="agenda-label">Phase 3 — Infrastructure, Monitoring & Payments</span>
+        <span class="agenda-dur">30 min</span>
+      </div>
+      <div class="agenda-row" style="background:#f0f0e8;border-color:#d8d0c0;">
+        <span class="agenda-time" style="color:var(--muted);">2:30 – 2:40 PM</span>
+        <span class="agenda-label" style="color:var(--muted);font-style:italic;">☕ Break</span>
+        <span class="agenda-dur">10 min</span>
+      </div>
+      <div class="agenda-row highlight">
+        <span class="agenda-time">2:40 – 4:10 PM</span>
+        <span class="agenda-label">Lab A — Lovable: AI Startup Directory</span>
+        <span class="agenda-dur">90 min</span>
+      </div>
+      <div class="agenda-row" style="background:#f0f0e8;border-color:#d8d0c0;">
+        <span class="agenda-time" style="color:var(--muted);">4:10 – 4:20 PM</span>
+        <span class="agenda-label" style="color:var(--muted);font-style:italic;">☕ Break</span>
+        <span class="agenda-dur">10 min</span>
+      </div>
+      <div class="agenda-row highlight">
+        <span class="agenda-time">4:20 – 5:50 PM</span>
+        <span class="agenda-label">Lab B — Google AI Studio + Stitch + Firebase: Smart Feedback Collector</span>
+        <span class="agenda-dur">90 min</span>
+      </div>
+      <div class="agenda-row" style="background:#f0f0e8;border-color:#d8d0c0;">
+        <span class="agenda-time" style="color:var(--muted);">5:50 – 6:00 PM</span>
+        <span class="agenda-label" style="color:var(--muted);font-style:italic;">☕ Break</span>
+        <span class="agenda-dur">10 min</span>
+      </div>
+      <div class="agenda-row highlight">
+        <span class="agenda-time">6:00 – 7:30 PM</span>
+        <span class="agenda-label">Lab C — Claude Code (GTM Planner) + Adalo (Booking App)</span>
+        <span class="agenda-dur">90 min</span>
+      </div>
+      <div class="agenda-row">
+        <span class="agenda-time">7:30 – 7:40 PM</span>
+        <span class="agenda-label">Demo Presentations + Wrap-up</span>
+        <span class="agenda-dur">Close ~7:40 PM</span>
+      </div>
+
+      <div class="callout" style="margin-top:16px;">
+        🎤 <strong>Facilitator Note:</strong> All three labs run 90 minutes each, all facilitated by Joshua Theophilus. Lab A (Lovable) is the primary hands-on session — every participant submits their OCP idea to a real live directory. Lab B (Google Tools) is a live build demo with follow-along. Lab C runs two parallel demos — Claude Code for the GTM Planner web app, then Adalo for the Booking & Appointment mobile app.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     TOOL STACK
+═══════════════════════════════════════════ -->
+<section class="section" id="tools">
+  <div class="container">
+    <div class="section-eyebrow">Arsenal</div>
+    <h2 class="section-title">The Full Tool Stack</h2>
+    <p class="section-desc">Every tool covered in ProductLab, grouped by function. Walk through this during Phase 1.</p>
+
+    <div class="tool-section-label">Idea Validation & Venture OS</div>
+    <div class="tool-grid">
+      <div class="tool-card" style="border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.05);"><div class="tool-card-name" style="color:var(--gold);">Product Nerve AI</div><div class="tool-card-cat">Venture Operating System</div><div class="tool-card-desc">Validate your idea before you build it. Run your concept through Product Nerve to stress-test assumptions, sharpen your OCP, and arrive at every build decision with data. <strong>Start here.</strong> — productnerve.com</div></div>
+    </div>
+
+    <div class="tool-section-label">No-Code / Low-Code Build</div>
+    <div class="tool-grid">
+      <div class="tool-card"><div class="tool-card-name">Lovable</div><div class="tool-card-cat">Full-Stack Builder</div><div class="tool-card-desc">Prompt-to-app. React frontend + Supabase backend. Ship in under an hour.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Adalo</div><div class="tool-card-cat">Mobile App Builder</div><div class="tool-card-desc">Drag-and-drop native mobile apps for iOS & Android. No Swift or Kotlin needed.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Google AI Studio</div><div class="tool-card-cat">AI Prototyping</div><div class="tool-card-desc">Gemini-powered app experimentation. Rapid idea testing with AI as a core feature.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Stitch by Google</div><div class="tool-card-cat">Design-to-Code</div><div class="tool-card-desc">AI design tool that generates real HTML/CSS/React code directly from your design intent.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Google Antigravity</div><div class="tool-card-cat">AI App Builder</div><div class="tool-card-desc">Google's AI-powered app creation tool. Build functional web experiences from natural language prompts. Explore after the workshop.</div></div>
+    </div>
+
+
+    <div class="tool-section-label">AI-Assisted / Code Development</div>
+    <div style="background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:10px 14px;margin-bottom:10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.05em;">
+      ✦ <strong style="color:var(--ink);">Lab coverage:</strong> Claude Code (via Desktop App) is covered in Lab A. Cursor, Windsurf, Google Antigravity, Replit, and OpenAI Codex are introduced briefly in Phase 1 but not covered in lab sessions — resources shared post-workshop via Product Slice HQ.
+    </div>
+    <div class="tool-grid">
+      <div class="tool-card"><div class="tool-card-name">Claude Code</div><div class="tool-card-cat">Agentic Coding · Desktop App</div><div class="tool-card-desc">Describe what you want, Claude builds it. Used via the Claude Desktop App in Lab A — no terminal or VS Code required to get started.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Cursor</div><div class="tool-card-cat">AI-Powered IDE · Explore Later</div><div class="tool-card-desc">VS Code fork with AI autocomplete, inline generation, and codebase-wide refactoring. Explore after the workshop.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Windsurf</div><div class="tool-card-cat">AI-Powered IDE · Explore Later</div><div class="tool-card-desc">Agentic IDE from Codeium. Cascade AI model writes and runs multi-step changes autonomously. Explore after the workshop.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Google Antigravity</div><div class="tool-card-cat">AI App Builder · Explore Later</div><div class="tool-card-desc">Google's AI-powered tool for building functional web apps from natural language prompts. Explore after the workshop.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Replit</div><div class="tool-card-cat">Browser-Based Dev · Explore Later</div><div class="tool-card-desc">Build and deploy entirely in-browser. Great for quick iterations and sharing environments. Explore after the workshop.</div></div>
+      <div class="tool-card"><div class="tool-card-name">OpenAI Codex</div><div class="tool-card-cat">AI Code Agent · Explore Later</div><div class="tool-card-desc">OpenAI's coding agent. Reads, writes, and tests code in a sandboxed environment autonomously. Explore after the workshop.</div></div>
+    </div>
+
+    <div class="tool-section-label">Dev Environment & Version Control</div>
+    <div class="tool-grid">
+      <div class="tool-card"><div class="tool-card-name">VS Code</div><div class="tool-card-cat">Code Editor</div><div class="tool-card-desc">The industry-standard code editor. Lightweight, extensible, and integrates with Claude Code, Cursor, and every major AI dev tool.</div></div>
+      <div class="tool-card"><div class="tool-card-name">GitHub</div><div class="tool-card-cat">Version Control</div><div class="tool-card-desc">Where your code lives. Track changes, collaborate, and trigger auto-deploys to Vercel or Railway with every push.</div></div>
+    </div>
+
+    <div class="tool-section-label">Backend & Infrastructure</div>
+    <div class="tool-grid">
+      <div class="tool-card"><div class="tool-card-name">Supabase</div><div class="tool-card-cat">Database + Auth + Storage</div><div class="tool-card-desc">Postgres DB, row-level auth, file storage, and realtime — all managed, all free to start.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Vercel</div><div class="tool-card-cat">Frontend Deployment</div><div class="tool-card-desc">Push-to-deploy. Every Git push auto-deploys. Free for personal projects and prototypes.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Railway</div><div class="tool-card-cat">Backend Deployment</div><div class="tool-card-desc">Deploy Node.js, Python, or any backend service. Simple pricing, no DevOps required.</div></div>
+    </div>
+
+    <div class="tool-section-label">Email</div>
+    <div class="tool-grid">
+      <div class="tool-card"><div class="tool-card-name">Resend</div><div class="tool-card-cat">Transactional Email</div><div class="tool-card-desc">Developer-first email API. Beautiful deliverability. 3,000 emails/month free — your first 3,000 users covered.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Zeptomail</div><div class="tool-card-cat">Transactional / Bulk</div><div class="tool-card-desc">Affordable, reliable email for African SaaS deployments. Excellent for high-volume at low cost.</div></div>
+    </div>
+
+    <div class="tool-section-label">Monitoring & Error Tracking</div>
+    <div class="tool-grid">
+      <div class="tool-card"><div class="tool-card-name">Sentry</div><div class="tool-card-cat">Error Monitoring</div><div class="tool-card-desc">Real-time bug tracking, stack traces, and performance monitoring. Catch issues before users report them.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Uptime Robot</div><div class="tool-card-cat">Uptime Monitoring</div><div class="tool-card-desc">Pings your URL every 5 minutes. Alerts via SMS or email if it goes down. Free tier is sufficient.</div></div>
+    </div>
+
+    <div class="tool-section-label">Product Analytics</div>
+    <div class="tool-grid">
+      <div class="tool-card"><div class="tool-card-name">PostHog</div><div class="tool-card-cat">Product Analytics</div><div class="tool-card-desc">Open-source. Session recordings, funnels, heatmaps, feature flags. Self-host or cloud.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Plausible</div><div class="tool-card-cat">Privacy-First Analytics</div><div class="tool-card-desc">Lightweight, GDPR-friendly web analytics. No cookies, no consent banners needed.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Mixpanel</div><div class="tool-card-cat">Behavioural Analytics</div><div class="tool-card-desc">Event-based tracking. Great for retention analysis, funnel optimisation, and cohort reports.</div></div>
+    </div>
+
+    <div class="tool-section-label">Marketing & Ad Analytics</div>
+    <div class="tool-grid">
+      <div class="tool-card"><div class="tool-card-name">Meta Pixel + CAPI</div><div class="tool-card-cat">Meta Ad Tracking</div><div class="tool-card-desc">Pixel for browser-side tracking. Conversions API (CAPI) for server-side — more accurate, iOS-proof.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Google Analytics 4</div><div class="tool-card-cat">Web Analytics</div><div class="tool-card-desc">GA4 event-based model. Cross-platform tracking for web and app in a single property.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Google Tag Manager</div><div class="tool-card-cat">Tag Management</div><div class="tool-card-desc">Deploy and manage all your tracking tags (GA4, Meta Pixel, etc.) without touching code every time.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Google Ads Manager</div><div class="tool-card-cat">Paid Acquisition</div><div class="tool-card-desc">Search and display campaign management. Connect to GA4 and GTM for closed-loop attribution.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Social Ads Tracking</div><div class="tool-card-cat">UTM + Attribution</div><div class="tool-card-desc">UTM parameters across LinkedIn, X/Twitter, TikTok. Track source → signup → revenue attribution end-to-end.</div></div>
+    </div>
+
+    <div class="tool-section-label">Payments</div>
+    <div class="tool-grid">
+      <div class="tool-card"><div class="tool-card-name">Stripe</div><div class="tool-card-cat">Global Payments</div><div class="tool-card-desc">Best-in-class for US/EU. Subscriptions, one-time, invoicing. Lovable integrates Stripe directly.</div></div>
+      <div class="tool-card"><div class="tool-card-name">Paystack</div><div class="tool-card-cat">African Payments</div><div class="tool-card-desc">Card, bank transfer, USSD, mobile money. Works where Stripe doesn't. Built for African markets.</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     PHASE 1
+═══════════════════════════════════════════ -->
+<section class="section" id="phase1">
+  <div class="container">
+    <div class="section-eyebrow">Phase 1 · 1:00 – 1:30 PM · 30 minutes</div>
+    <h2 class="section-title">The Mental Model</h2>
+    <p class="section-desc">Set the philosophical foundation before anyone touches a tool. This phase is about mindset, not mechanics.</p>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--tag-pm)"></div>PM</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--tag-pd)"></div>Designer</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--tag-pmk)"></div>Marketer</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(201,168,76,0.7)"></div>All Roles</div>
+    </div>
+
+    <div class="slides-grid">
+
+      <div class="slide-card">
+        <div class="slide-number">01</div>
+        <div class="slide-body">
+          <div class="slide-title">Opening: The Leverage Shift</div>
+          <div class="slide-type">Energy Setter · Keynote</div>
+          <div class="slide-content">
+            <p style="margin-bottom:10px;">Open with a single question on screen: <em>"If you could ship a product this weekend — what would you build?"</em> Let 2–3 people answer. Then:</p>
+            <ul>
+              <li>The engineering bottleneck is a myth you've accepted as fixed reality</li>
+              <li>AI has handed non-engineers a superpower — most people in this room aren't using it</li>
+              <li>Today that changes — you leave as a builder, not just a thinker</li>
+              <li>Anchor story: how a PM rescued a 9-month stalled product in 8 weeks using AI-assisted tools with zero engineering support</li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+      <div class="slide-card">
+        <div class="slide-number">02</div>
+        <div class="slide-body">
+          <div class="slide-title">The Spectrum: No-Code → Low-Code → AI-Code</div>
+          <div class="slide-type">Framework Slide</div>
+          <div class="slide-content">
+            <p style="margin-bottom:10px;">Draw a horizontal spectrum — three zones, zero judgment:</p>
+            <ul>
+              <li><strong>No-Code:</strong> Lovable, Adalo — describe it, AI builds it. Zero syntax required.</li>
+              <li><strong>Low-Code:</strong> Google AI Studio + Stitch — guide and configure. Some logic, more control.</li>
+              <li><strong>AI-Code:</strong> Claude Code, Cursor, Windsurf, Replit — you direct, AI writes. You review and approve.</li>
+              <li>You don't need to pick one lane forever. Use the right tool for the right job, today.</li>
+              <li>Today's labs cover all three. Everyone will leave having shipped something real.</li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+      <div class="slide-card">
+        <div class="slide-number">03</div>
+        <div class="slide-body">
+          <div class="slide-title">What "Shipped" Actually Means</div>
+          <div class="slide-type">Definition Slide</div>
+          <div class="slide-content">
+            <ul>
+              <li>A live URL someone else can open and use — that's a shipped product. Full stop.</li>
+              <li>Minimum viable: one problem solved, one user action possible, one data point captured</li>
+              <li>The startup loop: Build → Measure → Learn → Repeat</li>
+              <li>The failure mode: over-engineering before you've validated a single assumption</li>
+              <li>Your new mantra for the day: <strong>"Live beats perfect."</strong></li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+      <div class="slide-card">
+        <div class="slide-number">04</div>
+        <div class="slide-body">
+          <div class="slide-title">Why This Matters for YOUR Role</div>
+          <div class="slide-type">Role Breakout · Discussion Prompt · 5 min audience interaction</div>
+          <div class="slide-content">
+            <p style="margin-bottom:10px;">Address each group directly. Ask: <em>"What's one thing you've had to wait for engineering to build in the last 6 months?"</em></p>
+            <ul>
+              <li><strong>PMs:</strong> You can prototype before writing a PRD. Validate assumptions in days, not quarters. Stop guessing what users want.</li>
+              <li><strong>Designers:</strong> Your Figma frames become real, clickable, data-connected products. No more translation loss in handoff.</li>
+              <li><strong>Marketers:</strong> Your campaign ideas stop waiting in a dev queue. You build, A/B test, and iterate your own GTM assets.</li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-pm">PM</span><span class="tag tag-pd">Designer</span><span class="tag tag-pmk">Marketer</span></div>
+        </div>
+      </div>
+
+      <div class="slide-card">
+        <div class="slide-number">05</div>
+        <div class="slide-body">
+          <div class="slide-title">Tool Stack Tour — The Full Arsenal</div>
+          <div class="slide-type">Visual Overview · Reference the Tool Stack section</div>
+          <div class="slide-content">
+            <p style="margin-bottom:10px;">Walk through the five infrastructure layers visually. Keep it fast — 3 minutes max:</p>
+            <ul>
+              <li><strong>Layer 0 – Validate:</strong> Product Nerve AI (productnerve.com) — validate your idea before you open any build tool</li>
+              <li><strong>Layer 1 – Build:</strong> Lovable · Adalo · Stitch · Google Antigravity · Claude Code · Cursor · Windsurf · Replit · OpenAI Codex</li>
+              <li><strong>Layer 2 – Dev Environment:</strong> VS Code · GitHub (version control)</li>
+              <li><strong>Layer 3 – Backend:</strong> Supabase (DB + Auth + Storage) · Vercel · Railway</li>
+              <li><strong>Layer 4 – Delivery:</strong> Resend · Zeptomail · Stripe · Paystack</li>
+              <li><strong>Layer 5 – Intelligence:</strong> PostHog · Plausible · GA4 · GTM · Meta CAPI · Sentry · Uptime Robot</li>
+              <li>Punchline: You can wire all of this together this weekend. For free, or near-free.</li>
+            </ul>
+            <div style="margin-top:14px;background:rgba(196,80,42,0.07);border:1px solid rgba(196,80,42,0.2);border-radius:4px;padding:10px 14px;">
+              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--rust);margin-bottom:5px;">📌 Lab Coverage Note</div>
+              <div style="font-size:13px;color:var(--slate);line-height:1.55;">Today's labs cover <strong>Lovable, Claude Code (Desktop App), and Google AI Studio + Stitch</strong>. The following tools — <strong>Google Antigravity, Cursor, Windsurf, Replit, and OpenAI Codex</strong> — will be introduced briefly but are not covered in lab sessions. Resources and reading links for each will be shared after the workshop via Product Slice HQ.</div>
+            </div>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     PHASE 2
+═══════════════════════════════════════════ -->
+<section class="section" id="phase2">
+  <div class="container">
+    <div class="section-eyebrow">Phase 2 · 1:30 – 2:00 PM · 30 minutes</div>
+    <h2 class="section-title">Idea to Architecture</h2>
+    <p class="section-desc">How to think before you build. Turning fuzzy concepts into a concrete, buildable spec — in under 15 minutes.</p>
+
+    <div class="slides-grid">
+
+      <div class="slide-card">
+        <div class="slide-number">06</div>
+        <div class="slide-body">
+          <div class="slide-title">The OCP Framework: One Customer Problem</div>
+          <div class="slide-type">Proprietary Framework · Live Exercise · Joshua Theophilus</div>
+          <div class="slide-content">
+            <p style="margin-bottom:10px;">Before you open any tool, you complete the OCP. Twelve "ones" — each one forces a decision. No waffling, no hedging. One answer per box.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin:14px 0;">
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">01</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Customer Problem</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">The single most painful problem your target user faces today</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">02</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Solution</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">Your product's specific answer — one sentence, no ands, no buts</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">03</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Value Proposition</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">Why a user picks you over doing nothing — the tangible outcome you deliver</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">04</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Killer Feature</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">The one capability that makes users try — and tell others — about your product</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">05</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Monetisation Model</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">How this makes money — subscription, one-time, marketplace, or freemium</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">06</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Core User Segment</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">The one type of person you build for first — be precise, not broad</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">07</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Key Strategy</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">Your primary growth lever — virality, SEO, partnerships, community, or outbound</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">08</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Key Channel</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">Where your users already live — LinkedIn, WhatsApp, X, communities, or email</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">09</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Key Metric</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">The one number that tells you the product is working — activation, retention, revenue</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">10</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Unfair Advantage</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">What you have that a competitor cannot easily copy — access, expertise, network, data</div>
+              </div>
+              <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">11</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Retention Hook</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">Why users come back — habit, data lock-in, community, streaks, or ongoing value</div>
+              </div>
+              <div style="background:rgba(26,107,107,0.08);border:1px solid rgba(26,107,107,0.25);border-radius:4px;padding:10px 12px;">
+                <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:4px;">12 · JT's Add</div>
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);">Growth Loop</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px;">How the product grows itself — referrals, SEO content, viral sharing, or network effects</div>
+              </div>
+            </div>
+            <p style="margin-top:12px;font-size:13.5px;color:var(--slate);">The OCP flows from problem → solution → value → growth → retention in one pass. When all twelve align, you have something worth building. If they don't, you haven't found the right idea yet — and that's the point.</p>
+            <ul style="margin-top:10px;">
+              <li>Live exercise: complete your OCP canvas in 10 minutes. Share 2–3 with the room for real-time critique.</li>
+              <li>Rule: if you can't answer all twelve in 10 minutes, the idea needs more thinking — not more building</li>
+              <li>Point participants to <strong>Product Nerve AI (productnerve.com)</strong> — they should validate their OCP output here before Lab A begins</li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+      <div class="slide-card">
+        <div class="slide-number">07</div>
+        <div class="slide-body">
+          <div class="slide-title">Prompt Engineering for Builders — The SPARK Framework</div>
+          <div class="slide-type">Core Skill Slide · Live Demo</div>
+          <div class="slide-content">
+            <p style="margin-bottom:10px;">The quality of what you build = the quality of your prompts. Introduce SPARK:</p>
+            <ul>
+              <li><strong>S – Scope:</strong> What are you building? (App? Landing page? Dashboard? API?)</li>
+              <li><strong>P – Persona:</strong> Who is the user? What do they need to accomplish?</li>
+              <li><strong>A – Actions:</strong> What are the 3 key things a user must be able to do?</li>
+              <li><strong>R – Result:</strong> What happens when they complete each action?</li>
+              <li><strong>K – Keep out:</strong> What should this NOT do? Scope creep kills MVPs.</li>
+              <li>Live demo: Prompt a live landing page in Lovable using SPARK. Watch it appear in real time.</li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+      <div class="slide-card">
+        <div class="slide-number">08</div>
+        <div class="slide-body">
+          <div class="slide-title">Role-Based Build Strategies</div>
+          <div class="slide-type">Role Spotlight · 3 Use Cases in 5 minutes</div>
+          <div class="slide-content">
+            <p style="margin-bottom:10px;">Rapid-fire: show how each role uses the same tool differently:</p>
+            <ul>
+              <li><strong>PM:</strong> Build a hypothesis-testing prototype — not a PRD, a live URL. Share it with 10 users before next sprint.</li>
+              <li><strong>Designer:</strong> Use Stitch to turn design intent into real code. Share a working prototype URL instead of a Figma link.</li>
+              <li><strong>Marketer:</strong> Build your own campaign landing page with email capture, UTM tracking, and a live signups counter. Own your GTM.</li>
+              <li>Common thread: every role produces a live URL. That's the output measure.</li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-pm">PM</span><span class="tag tag-pd">Designer</span><span class="tag tag-pmk">Marketer</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     PHASE 3
+═══════════════════════════════════════════ -->
+<section class="section" id="phase3">
+  <div class="container">
+    <div class="section-eyebrow">Phase 3 · 2:00 – 2:30 PM · 30 minutes</div>
+    <h2 class="section-title">The Invisible Stack</h2>
+    <p class="section-desc">The infrastructure that determines whether your product survives real users — and why you need to set it up from day one.</p>
+
+    <div class="slides-grid">
+
+      <div class="slide-card">
+        <div class="slide-number">09</div>
+        <div class="slide-body">
+          <div class="slide-title">Infrastructure Is Not Optional — It IS the Product</div>
+          <div class="slide-type">Reframe Slide</div>
+          <div class="slide-content">
+            <ul>
+              <li>The product that dies after 100 users wasn't ready — the infrastructure was missing</li>
+              <li>Infrastructure = the systems that keep your product alive, secure, and trustworthy</li>
+              <li>Today's tools make production-ready the <em>default</em>, not a later milestone</li>
+              <li>Five layers: Database → Auth → Email → Monitoring → Payments. Walk each one fast.</li>
+              <li>Story hook: a founder's payment page broke for 48 hours — cost them 40 signups. Sentry + Uptime Robot costs $0 and would have caught it in 5 minutes.</li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+      <div class="slide-card">
+        <div class="slide-number">10</div>
+        <div class="slide-body">
+          <div class="slide-title">Database + Auth: Supabase in 60 Seconds</div>
+          <div class="slide-type">Tool Demo</div>
+          <div class="slide-content">
+            <ul>
+              <li><strong>Database:</strong> Postgres tables — looks like Airtable. Audience exhales.</li>
+              <li><strong>Auth:</strong> Email/password, Google OAuth, magic links — built in. Zero extra code.</li>
+              <li><strong>Storage:</strong> File uploads with access controls. PDFs, images, documents.</li>
+              <li><strong>Realtime:</strong> Live updates across users without touching WebSocket code.</li>
+              <li>Lovable connects to Supabase in one click — your data lives in a real database from minute one.</li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+      <div class="slide-card">
+        <div class="slide-number">11</div>
+        <div class="slide-body">
+          <div class="slide-title">Email, Monitoring, Analytics & Payments — Speed Round</div>
+          <div class="slide-type">Rapid Tour · 5 Tools in 5 Minutes</div>
+          <div class="slide-content">
+            <ul>
+              <li><strong>Resend:</strong> New user signs up → branded welcome email fires automatically. 3,000/month free.</li>
+              <li><strong>Sentry + Uptime Robot:</strong> Real-time error tracking and uptime alerts. Setup time: 10 min each. No excuses.</li>
+              <li><strong>PostHog / GA4 + GTM:</strong> Track activation, retention, and channel attribution. GTM manages all your tags — Meta Pixel, GA4, custom events — from one dashboard without touching code every time.</li>
+              <li><strong>Meta Pixel + CAPI:</strong> Browser + server-side tracking. Closes the iOS attribution gap. Essential for any paid social campaign.</li>
+              <li><strong>Stripe / Paystack:</strong> Add payment on day one — even if free now. It signals serious intent. Paystack for African markets, Stripe for global.</li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+      <div class="slide-card">
+        <div class="slide-number">12</div>
+        <div class="slide-body">
+          <div class="slide-title">Deploy: Localhost to Live in 3 Minutes</div>
+          <div class="slide-type">Live Demo · Transition to Labs</div>
+          <div class="slide-content">
+            <ul>
+              <li>Lovable deploys to Vercel by default — one click, live URL, done</li>
+              <li>Custom domain: Namecheap (~$10/yr) → point DNS to Vercel → live in 5 minutes</li>
+              <li>Backend services (APIs, workers) go on Railway — same push-to-deploy simplicity</li>
+              <li>Live demo: deploy a Lovable project, add a custom domain, show the live URL in the browser</li>
+              <li>Close with: <em>"The moment you hand someone your URL — that's when you become a founder. You're about to do that."</em></li>
+            </ul>
+          </div>
+          <div class="slide-tags"><span class="tag tag-all">All Roles</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     BREAKOUT LABS
+═══════════════════════════════════════════ -->
+<section class="breakout-section" id="lab1">
+  <div class="container">
+    <div class="section-eyebrow">Hands-On Labs · 2:40 – 7:30 PM</div>
+    <h2 class="section-title">Three Labs. One Goal: Ship.</h2>
+    <p class="section-desc">All three labs run 90 minutes each, all facilitated by Joshua Theophilus. 10-minute breaks between each session.</p>
+
+    <div class="breakout-grid">
+
+      <!-- LAB A -->
+      <div class="breakout-card" id="lab1-card">
+        <div class="breakout-card-num">Lab A · 2:40 – 4:10 PM</div>
+        <div class="breakout-card-title">Lovable: AI Startup Directory</div>
+        <div class="breakout-card-tagline">Build the live platform everyone lists their idea on — then submit yours.</div>
+
+        <h4>The Concept</h4>
+        <ul>
+          <li>Build a live <strong>AI-Assisted Startup Directory</strong> using Lovable — a real, public-facing platform where participants submit and browse AI startup ideas built with AI-assisted tools</li>
+          <li>By the end of the lab, every participant submits their OCP idea from Phase 2 to the live directory</li>
+          <li>After the workshop, Joshua reviews all submissions and spotlights the best via Product Slice HQ</li>
+          <li>The directory stays permanently live — a community artefact from ProductLab Edition 01</li>
+        </ul>
+
+        <h4>What Gets Built</h4>
+        <ul>
+          <li>Homepage: browsable card grid of AI startup submissions with filters by category, tool used, and stage</li>
+          <li>Submit page: form capturing name, idea title, problem solved, tool used, live URL (if any), and one-liner OCP pitch</li>
+          <li>Supabase backend: all submissions stored in a real Postgres database, rendered in real time</li>
+          <li>Detail page: each idea gets its own public-facing page with the full OCP breakdown</li>
+          <li>Spotlight badge: "Featured by JT" tag applied post-workshop to the best submissions</li>
+          <li>Resend confirmation: every submitter gets a branded email confirming their idea is live</li>
+          <li>PostHog analytics: track page visits, most-viewed ideas, and submission velocity</li>
+          <li>Deployed to Vercel — live, shareable URL before the session ends</li>
+        </ul>
+
+        <h4>Step-by-Step (90 min)</h4>
+        <ul>
+          <li><strong>0:00–0:08</strong> — Write and run the SPARK prompt in Lovable for the full directory. Show the initial output live.</li>
+          <li><strong>0:08–0:25</strong> — Iterate: refine the card grid, fix submission form fields to match the OCP, tune the layout.</li>
+          <li><strong>0:25–0:40</strong> — Connect Supabase: create ideas table (name, title, problem, tool, url, pitch, featured). Enable admin auth.</li>
+          <li><strong>0:40–0:50</strong> — Wire Resend: submission confirmation email auto-fires to every founder who lists their idea.</li>
+          <li><strong>0:50–1:00</strong> — Drop PostHog snippet in. Deploy to Vercel. Test full submission flow end-to-end.</li>
+          <li><strong>1:00–1:20</strong> — Open submissions: every participant fills in and submits their OCP live. Watch the directory populate in real time.</li>
+          <li><strong>1:20–1:30</strong> — Browse together. JT announces which ideas will receive the post-workshop spotlight. Prep 2-min demo.</li>
+        </ul>
+
+        <h4>Why This Format Works</h4>
+        <ul>
+          <li>Participants don't just watch a build — they become part of the product they just watched being built</li>
+          <li>The directory is proof of concept AND the community artefact from Edition 01</li>
+          <li>The spotlight mechanic gives every participant a reason to stay engaged with Product Slice HQ after the workshop</li>
+          <li>JT owns a growing, curated directory of AI startup ideas to feature, write about, and build community around</li>
+        </ul>
+
+        <div class="dur-badge">⏱ 90 minutes · All skill levels · Hands-on + live submission</div>
+      </div>
+
+      <!-- LAB B -->
+      <div class="breakout-card" id="lab2-card">
+        <div class="breakout-card-num">Lab B · 4:20 – 5:50 PM</div>
+        <div class="breakout-card-title">Google AI Studio + Stitch + Firebase</div>
+        <div class="breakout-card-tagline">Design-first, AI-powered — from visual intent to a Gemini-driven product.</div>
+
+        <h4>The Concept</h4>
+        <ul>
+          <li>Build <strong>"Smart Feedback Collector"</strong> — a product feedback tool where users submit feedback, Gemini AI categorises it by theme and sentiment, and results render live in a visual dashboard</li>
+          <li>Three Google tools working together: Stitch for design → AI Studio + Gemini for intelligence → Firebase for backend data storage</li>
+          <li>Google Antigravity introduced as an optional adjacent tool for further exploration after the workshop</li>
+        </ul>
+
+        <h4>What Gets Built</h4>
+        <ul>
+          <li>Submission screen: clean form UI built and exported from Stitch — real HTML/CSS/React, not a mockup</li>
+          <li>Gemini AI layer: feedback text is sent to Gemini via AI Studio API → returns category tag + sentiment score (positive / neutral / negative)</li>
+          <li>Firebase Firestore: all submissions + AI analysis results stored in real time, no server required</li>
+          <li>Dashboard screen: live feed of categorised feedback with sentiment visualisation — built in Stitch, powered by Firebase</li>
+          <li>Optional: Google Antigravity introduced briefly as an alternate build path for AI-native apps</li>
+        </ul>
+
+        <h4>Step-by-Step (90 min)</h4>
+        <ul>
+          <li><strong>0:00–0:10</strong> — Define the 3 core screens: Submit Feedback, Thank You, Dashboard. Brief the Stitch prompt.</li>
+          <li><strong>0:10–0:30</strong> — Use Stitch to generate all three screens. Export the React/HTML code. Review structure live.</li>
+          <li><strong>0:30–0:50</strong> — Open Google AI Studio: create a Gemini prompt that takes feedback text and returns a JSON object with category + sentiment. Test with live examples.</li>
+          <li><strong>0:50–1:05</strong> — Wire the Gemini API call into the submission form: on submit → call Gemini → store result in Firebase Firestore.</li>
+          <li><strong>1:05–1:20</strong> — Connect dashboard to Firebase: real-time listener renders new submissions as they arrive. Show live data flow.</li>
+          <li><strong>1:20–1:25</strong> — Quick Antigravity mention: show what it does and where it fits as an alternative build path.</li>
+          <li><strong>1:25–1:30</strong> — Test full flow. Prep 2-min demo.</li>
+        </ul>
+
+        <h4>Key Talking Points</h4>
+        <ul>
+          <li>"Stitch is what happens when Figma and a frontend dev have a child — powered by Gemini"</li>
+          <li>"Everything you see is real code. Not a wireframe. You can deploy this today."</li>
+          <li>"Firebase gives you a real-time backend without writing a single server function"</li>
+          <li>"This trio — Stitch + AI Studio + Firebase — is a full AI-native product stack from Google, end to end"</li>
+        </ul>
+
+        <div class="dur-badge">⏱ 90 minutes · Intermediate · Live facilitator build + follow-along</div>
+      </div>
+
+      <!-- LAB C -->
+      <div class="breakout-card" id="lab3-card">
+        <div class="breakout-card-num">Lab C · 6:00 – 7:30 PM</div>
+        <div class="breakout-card-title">Claude Code + Adalo</div>
+        <div class="breakout-card-tagline">Two builds in one lab — a web app via Claude Code Desktop, and a mobile app via Adalo.</div>
+
+        <h4>The Concept</h4>
+        <ul>
+          <li>Lab C runs two sequential live builds, splitting the 90 minutes between Claude Code (web) and Adalo (mobile)</li>
+          <li><strong>Claude Code build (50 min):</strong> GTM Campaign Planner — a structured web app that helps teams build, organise, and output a shareable go-to-market campaign brief</li>
+          <li><strong>Adalo build (35 min):</strong> Booking & Appointment App — a native mobile app with embeddable booking widget that can be integrated into any website or platform via a simple code snippet</li>
+          <li>All done via the Claude Desktop App — no terminal setup, no VS Code required</li>
+        </ul>
+
+        <h4>Build 1 — GTM Campaign Planner (Claude Code · 50 min)</h4>
+        <ul>
+          <li>Users input product name, target audience, key message, and campaign goal</li>
+          <li>App structures and outputs a complete GTM brief: channel plan, messaging hierarchy, CTA recommendations, and success metrics — formatted as a shareable, downloadable doc</li>
+          <li>Supabase stores all campaigns. Resend emails the finished brief to the user.</li>
+          <li>Deployed to Vercel — live URL in under 50 minutes via Claude Desktop prompting only</li>
+        </ul>
+
+        <h4>Build 1 — Step-by-Step (50 min)</h4>
+        <ul>
+          <li><strong>0:00–0:08</strong> — Open Claude Desktop App. OCP for the GTM Planner. Prompt Claude to scaffold the full project.</li>
+          <li><strong>0:08–0:20</strong> — Review file structure. Prompt auth: "Add Supabase email login and a protected dashboard."</li>
+          <li><strong>0:20–0:35</strong> — Prompt the core form: "Build a GTM brief form with fields for product name, audience, key message, channels, and goal. Save to Supabase."</li>
+          <li><strong>0:35–0:45</strong> — Prompt the output page: "Generate a structured GTM doc from the form data. Make it downloadable as PDF. Email it via Resend."</li>
+          <li><strong>0:45–0:50</strong> — Push to GitHub. Deploy to Vercel. Show live URL. Test the full flow end-to-end.</li>
+        </ul>
+
+        <h4>Build 2 — Booking & Appointment App (Adalo · 35 min)</h4>
+        <ul>
+          <li>Native mobile app for iOS & Android — service listing, date/time picker, booking confirmation, and appointment history</li>
+          <li>Built entirely in Adalo's visual editor — no code written</li>
+          <li>Embeddable booking widget: Adalo generates a web embed snippet that can be dropped into any website, Notion page, or external platform</li>
+          <li>Use case: any service business (consultant, coach, clinic, studio) can embed this and take bookings without a custom dev build</li>
+        </ul>
+
+        <h4>Build 2 — Step-by-Step (35 min)</h4>
+        <ul>
+          <li><strong>0:50–1:00</strong> — Create Adalo project. Set up collections: Services, Users, Bookings. Define relationships.</li>
+          <li><strong>1:00–1:15</strong> — Build core screens: Home (service list), Book (date/time picker + confirm), My Bookings (history). Link all screens.</li>
+          <li><strong>1:15–1:20</strong> — Enable Adalo auth. Test login + booking flow on mobile preview.</li>
+          <li><strong>1:20–1:25</strong> — Show the web embed snippet. Paste into a live webpage and demonstrate the booking flow embedded in a browser.</li>
+          <li><strong>1:25–1:30</strong> — Recap both builds. Close with: "One lab, two live products, zero lines of manually written code."</li>
+        </ul>
+
+        <h4>Key Talking Points</h4>
+        <ul>
+          <li>"Claude Code via Desktop App is the most accessible entry point to agentic coding — no setup friction"</li>
+          <li>"You directed. Claude executed. Every prompt you wrote was a spec — and specs became working software."</li>
+          <li>"Adalo's embed feature means your mobile app is also a widget. One build, multiple surfaces."</li>
+          <li>"By the end of this lab you've shipped a web app and a mobile app in 90 minutes. That is the new baseline."</li>
+        </ul>
+
+        <div class="dur-badge">⏱ 90 minutes · Intermediate · Two live builds</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     DEMO DAY
+═══════════════════════════════════════════ -->
+<section class="section" id="demo" style="background:var(--teal-light);">
+  <div class="container">
+    <div class="section-eyebrow">Close · 7:30 – 7:40 PM</div>
+    <h2 class="section-title">Demo Day + Wrap-Up</h2>
+    <p class="section-desc">Every participant gets 2 minutes. One screen. One working user flow. One "what's next."</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:32px;">
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:4px;padding:20px;">
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;">The 2-Minute Demo Format</div>
+        <ul style="font-size:13.5px;color:var(--slate);list-style:none;padding:0;display:flex;flex-direction:column;gap:6px;">
+          <li style="padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:var(--gold);">1.</span> What problem did you solve?</li>
+          <li style="padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:var(--gold);">2.</span> Show it working live — on screen</li>
+          <li style="padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:var(--gold);">3.</span> What would you build next?</li>
+        </ul>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:4px;padding:20px;">
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;">Recognition (Optional)</div>
+        <ul style="font-size:13.5px;color:var(--slate);list-style:none;padding:0;display:flex;flex-direction:column;gap:6px;">
+          <li style="padding-left:16px;position:relative;"><span style="position:absolute;left:0;">🏆</span> Best Problem-Solution Fit</li>
+          <li style="padding-left:16px;position:relative;"><span style="position:absolute;left:0;">⚡</span> Fastest Time to Live URL</li>
+          <li style="padding-left:16px;position:relative;"><span style="position:absolute;left:0;">✨</span> Most Creative Use of AI</li>
+        </ul>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:4px;padding:20px;">
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;">The 72-Hour Challenge</div>
+        <p style="font-size:13.5px;color:var(--slate);line-height:1.6;">Close with one task: <em>"Ship one more iteration within 72 hours. Post your live URL in the Product Slice HQ community."</em> This is how the habit forms — and how Edition 02 gets its waitlist.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      🔗 <strong>Community CTA:</strong> Direct every participant to <strong>Product Slice HQ</strong> for ongoing resources, templates, and the next ProductLab with JT edition announcement. Edition 01 fills Edition 02.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><span>ProductLab with JT · Edition 01</span> · Powered by Product Slice HQ · A Rare Phronesis Limited Initiative</div>
+  <div>Facilitated by <span>Joshua Theophilus</span> · www.joshuatheophilus.com · joshua.t@productslicehq.com</div>
+</footer>
+
+</body>
+</html>
